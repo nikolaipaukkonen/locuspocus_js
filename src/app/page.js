@@ -35,6 +35,7 @@ export default function Home() {
               console.error('Error playing audio:', err);
             };
             //audio.play();
+
             try {
               const reader = new FileReader();
               reader.readAsDataURL(audioBlob);
@@ -84,6 +85,24 @@ export default function Home() {
     }
   };
 
+  const convertToJSON = () => {
+    console.log("convertToJSON")
+
+    const response = fetch("/api/parseJSON", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ audio: base64Audio }),
+    });
+
+    const data_json = response.json();
+    if (response.status !== 200) {
+      throw data.error || new Error(`Request failed with status ${response.status}`);
+    }
+    setResult(data_json.result);
+  };
+
   // Render the component
   return (
     <main className={styles.main}>
@@ -99,7 +118,7 @@ export default function Home() {
         <h2>
           Convert audio text to json <span>-&gt;</span>
         </h2>
-        <button onClick={recording ? stopRecording : startRecording} >
+        <button onClick={convertToJSON} >
           {'Convert to JSON'}
         </button>
         <p>{result}</p>
