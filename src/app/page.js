@@ -85,18 +85,18 @@ export default function Home() {
     }
   };
 
-  const convertToJSON = () => {
-    console.log("convertToJSON")
+  async  function convertToJSON() {
+    console.log("convertToJSON kutsuttu")
 
     const response = fetch("/api/parseJSON", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ audio: base64Audio }),
+      body: JSON.stringify({ text_to_parse: result }),
     });
 
-    const data_json = response.json();
+    const data_json = await response.json();
     if (response.status !== 200) {
       throw data.error || new Error(`Request failed with status ${response.status}`);
     }
@@ -113,7 +113,7 @@ export default function Home() {
         <button onClick={recording ? stopRecording : startRecording} >
           {recording ? 'Stop Recording' : 'Start Recording'}
         </button>
-        <h2>results</h2>
+        <h2>Results</h2>
         <p>{result}</p>
         <h2>
           Convert audio text to json <span>-&gt;</span>

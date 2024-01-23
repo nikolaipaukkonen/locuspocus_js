@@ -74,23 +74,17 @@ async function convertAudioToText(audioData) {
 // This function converts audio data to MP3 format using ffmpeg
 async function convertAudioToMp3(audioData) {
   // Write the audio data to a file
-  console.log("mp3-juttua kutsuttu")
   const inputPath = '/tmp/input.webm';
 
-  console.log("writefilesync aloittaa")
   fs.writeFileSync(inputPath, audioData);
-  console.log("writefilesync lopettaa")
 
   // Convert the audio to MP3 using ffmpeg
   const outputPath = '/tmp/output.mp3';
-  console.log("execAsync kutsuttu")
   await execAsync(`ffmpeg -y -i ${inputPath} ${outputPath}`);
-  console.log("execAsync valmis")
+  
 
   // Read the converted audio data
-  console.log("ffmpeg aloittaa")
   const mp3AudioData = fs.readFileSync(outputPath);
-  console.log("ffmpeg lopettaa")
   // Delete the temporary files
   fs.unlinkSync(inputPath);
   fs.unlinkSync(outputPath);

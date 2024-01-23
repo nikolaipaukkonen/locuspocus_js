@@ -5,10 +5,12 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import { NextResponse } from "next/server";
 
+console.log("POST tuli perille")
 // Promisify the exec function from child_process
 const util = require('util');
 const execAsync = util.promisify(exec);
 const instruction_prompt = process.env.PROMPT
+
 // Configure the OpenAI API client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -25,14 +27,11 @@ export async function POST(request) {
   const req = await request.json()
 
   // Extract the audio data from the request body
-  const base64Audio = req.audio;
-
-  // Convert the Base64 audio data back to a Buffer
-  const audio = Buffer.from(base64Audio, 'base64');
+  const transcribedText = req.text_to_parse;
 
   try {
     // Convert the audio data to text
-    const text = await convertAudioToText(audio);
+    const text = await parseToJSON(instruction_prompt,transcribedText);
     // Return the transcribed text in the response
     return NextResponse.json({result: text}, {status:200});
   } catch(error) {
@@ -48,10 +47,11 @@ export async function POST(request) {
 }
 
 // This function converts input text to JSON using the OpenAI API
-async function parseTextToJSON(instruction_prompt, input_text) {
+async function parseToJSON(instruction_prompt, input_text) {
     const parsedText = await openai.chat.completions.create({
         messages: [{role: "system","content": instruction_prompt}, {role: "user", "content": input_text}],
-        model: "gpt-3.gpt-3.5-turbo"
+        model: "gpt-3.5-turbo"
     })
-  return parsedText;
+    console.log(parsedText.choices[0].message.content)
+  return parsedText.choices[0].message.content;
 }
