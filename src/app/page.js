@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 export default function Home() {
   // Define state variables for the result, recording status, and media recorder
   const [result, setResult] = useState();
+  const [parsedResult, setParsedResult] = useState();
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
@@ -85,23 +86,31 @@ export default function Home() {
     }
   };
 
-  async  function convertToJSON() {
-    console.log("convertToJSON kutsuttu")
+  async function convertToJSON() {
+    console.log("convertToJSON kutsuttu");
+  
+    try {
+      const response = await fetch("/api/parseJSON", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text_to_parse: result }),
+      });
+  
+      if (response.status !== 200) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+  
+      const data_json = await response.json();
+      console.log("data_json");
+      console.log(data_json);
+      setParsedResult(data_json.result);
 
-    const response = fetch("/api/parseJSON", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text_to_parse: result }),
-    });
-
-    const data_json = await response.json();
-    if (response.status !== 200) {
-      throw data.error || new Error(`Request failed with status ${response.status}`);
+    } catch (error) {
+      console.error("Error converting to JSON:", error);
     }
-    setResult(data_json.result);
-  };
+  }
 
   // Render the component
   return (
@@ -121,7 +130,7 @@ export default function Home() {
         <button onClick={convertToJSON} >
           {'Convert to JSON'}
         </button>
-        <p>{result}</p>
+        <p>{parsedResult}</p>
       </div>
     </main>
   )
