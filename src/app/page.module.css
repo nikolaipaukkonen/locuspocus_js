@@ -1,0 +1,41 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    background-color: #fafafa;
+  }
+  
+  .description {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .description h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .description button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px
+  }
+  
+  .result {
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  
