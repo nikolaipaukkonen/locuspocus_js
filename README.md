@@ -1,3 +1,17 @@
+# Locus Pocus App
+
+The project is intended for transcribing and parsing archaeological field notes, such as stratigraphical documentation. 
+
+## To be implemented
+- Either local "database" (a JSON file creation mode)
+- Or online database communication through an API
+- Users?
+- Input OpenAI API key
+- Input online database API key
+- User can modify the prompt
+
+## Next.js
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
