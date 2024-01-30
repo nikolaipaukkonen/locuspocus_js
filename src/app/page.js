@@ -131,6 +131,9 @@ export default function Home() {
           {'Convert to JSON'}
         </button>
         <p>{parsedResult}</p>
+        <h2>
+          Add to database <span>-&gt;</span>
+        </h2>
       </div>
     </main>
   )
