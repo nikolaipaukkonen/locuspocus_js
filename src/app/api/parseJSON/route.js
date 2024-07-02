@@ -52,7 +52,7 @@ export async function POST(request) {
 async function parseToJSON(instruction_prompt, input_text) {
     const parsedText = await openai.chat.completions.create({
         messages: [{role: "system","content": "json "+instruction_prompt}, {role: "user", "content": "json " + input_text}],
-        model: "gpt-4-1106-preview",
+        model: "gpt-3.5-turbo",
         response_format:{type: "json_object"}
     })
     console.log(parsedText)
