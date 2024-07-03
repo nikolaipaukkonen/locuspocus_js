@@ -6,7 +6,9 @@ import { useState, useEffect } from "react";
 
 // This is the main component of our application
 export default function Home() {
-  // Define state variables for the result, recording status, and media recorder
+  // Define state variables for the API key, result, recording status, and media recorder
+  const [apiKey, setApiKey] = useState("");
+  const [apiKeySet, setApiKeySet] = useState(false);
   const [result, setResult] = useState();
   const [parsedResult, setParsedResult] = useState();
   const [recording, setRecording] = useState(false);
@@ -17,7 +19,7 @@ export default function Home() {
 
   // This useEffect hook sets up the media recorder when the component mounts
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && apiKeySet) {
       navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
           const newMediaRecorder = new MediaRecorder(stream);
@@ -46,7 +48,8 @@ export default function Home() {
                 const response = await fetch("/api/speechToText", {
                   method: "POST",
                   headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
                   },
                   body: JSON.stringify({ audio: base64Audio }),
                 });
@@ -66,7 +69,7 @@ export default function Home() {
         })
         .catch(err => console.error('Error accessing microphone:', err));
     }
-  }, []);
+  }, [apiKeySet]);
 
   // Function to start recording
   const startRecording = () => {
@@ -93,7 +96,8 @@ export default function Home() {
       const response = await fetch("/api/parseJSON", {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({ text_to_parse: result }),
       });
@@ -112,28 +116,44 @@ export default function Home() {
     }
   }
 
+  // Function to handle API key submission
+  const handleApiKeySubmit = () => {
+    if (apiKey.trim()) {
+      setApiKeySet(true);
+    }
+  }
+
   // Render the component
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <h2>
-          Convert audio to text <span>-&gt;</span>
-        </h2>
-        <button onClick={recording ? stopRecording : startRecording} >
-          {recording ? 'Stop Recording' : 'Start Recording'}
-        </button>
-        <h2>Results</h2>
-        <p>{result}</p>
-        <h2>
-          Convert audio text to json <span>-&gt;</span>
-        </h2>
-        <button onClick={convertToJSON} >
-          {'Convert to JSON'}
-        </button>
-        <p>{parsedResult}</p>
-        <h2>
-          Add to database <span>-&gt;</span>
-        </h2>
+        {!apiKeySet ? (
+          <>
+            <h2>Enter your API Key</h2>
+            <input 
+              type="text" 
+              value={apiKey} 
+              onChange={(e) => setApiKey(e.target.value)} 
+              placeholder="Enter API key" 
+            />
+            <button onClick={handleApiKeySubmit}>Submit</button>
+          </>
+        ) : (
+          <>
+            <h2>Convert audio to text <span>-&gt;</span></h2>
+            <button onClick={recording ? stopRecording : startRecording} >
+              {recording ? 'Stop Recording' : 'Start Recording'}
+            </button>
+            <h2>Results</h2>
+            <p>{result}</p>
+            <h2>Convert audio text to json <span>-&gt;</span></h2>
+            <button onClick={convertToJSON} >
+              {'Convert to JSON'}
+            </button>
+            <p>{parsedResult}</p>
+            <h2>Add to database <span>-&gt;</span></h2>
+          </>
+        )}
       </div>
     </main>
   )
