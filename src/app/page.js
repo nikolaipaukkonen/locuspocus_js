@@ -6,21 +6,20 @@ import { useState, useEffect } from "react";
 
 // This is the main component of our application
 export default function Home() {
-  // Define state variables for the API key, result, recording status, and media recorder
-  const [apiKey, setApiKey] = useState("");
-  const [apiKeySet, setApiKeySet] = useState(false);
+  // Define state variables for the password, result, recording status, and media recorder
+  const [password, setPassword] = useState("");
+  const [passwordValid, setPasswordValid] = useState(false);
   const [result, setResult] = useState();
   const [parsedResult, setParsedResult] = useState();
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
-
 
   // This array will hold the audio data
   let chunks = [];
 
   // This useEffect hook sets up the media recorder when the component mounts
   useEffect(() => {
-    if (typeof window !== 'undefined' && apiKeySet) {
+    if (typeof window !== 'undefined' && passwordValid) {
       navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
           const newMediaRecorder = new MediaRecorder(stream);
@@ -70,7 +69,7 @@ export default function Home() {
         })
         .catch(err => console.error('Error accessing microphone:', err));
     }
-  }, [apiKeySet]);
+  }, [passwordValid]);
 
   // Function to start recording
   const startRecording = () => {
@@ -117,29 +116,29 @@ export default function Home() {
     }
   }
 
-  // Function to handle API key submission
-  const handleApiKeySubmit = () => {
-    if (apiKey.trim()) {
-      setApiKeySet(true);
-      localStorage.setItem('apiKey', apiKey); // Store apiKey in localStorage
+  // Function to handle password submission
+  const handlePasswordSubmit = () => {
+    if (password === "EAA2024_test") {
+      setPasswordValid(true);
+    } else {
+      alert("Invalid password");
     }
   }
-  
 
   // Render the component
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        {!apiKeySet ? (
+        {!passwordValid ? (
           <>
-            <h2>Enter your API Key</h2>
+            <h2>Enter your password</h2>
             <input 
-              type="text" 
-              value={apiKey} 
-              onChange={(e) => setApiKey(e.target.value)} 
-              placeholder="Enter API key" 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              placeholder="Enter password" 
             />
-            <button onClick={handleApiKeySubmit}>Submit</button>
+            <button onClick={handlePasswordSubmit}>Submit</button>
           </>
         ) : (
           <>

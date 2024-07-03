@@ -13,7 +13,7 @@ const instruction_prompt = process.env.PROMPT
 
 // Configure the OpenAI API client
 const openai = new OpenAI({
-  apiKey: localStorage.getItem('apiKey'), // Retrieve apiKey from localStorage
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // This function handles POST requests to the /api/speechToText route
