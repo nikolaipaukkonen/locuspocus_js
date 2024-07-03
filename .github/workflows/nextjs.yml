@@ -3,8 +3,7 @@
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
 name: Deploy Next.js site to Pages
-env: 
-  OPENAI_API_KEY: $${{ secrets.OPENAI_API_KEY }}
+
 on:
   # Runs on pushes targeting the default branch
   push:
@@ -92,3 +91,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        env: 
+          OPENAI_API_KEY: $${{ secrets.OPENAI_API_KEY }}
