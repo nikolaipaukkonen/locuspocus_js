@@ -14,6 +14,7 @@ export default function Home() {
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
+
   // This array will hold the audio data
   let chunks = [];
 
@@ -49,7 +50,7 @@ export default function Home() {
                   method: "POST",
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
+                    'Authorization': `Bearer ${localStorage.getItem('apiKey')}` // Retrieve apiKey
                   },
                   body: JSON.stringify({ audio: base64Audio }),
                 });
@@ -97,7 +98,7 @@ export default function Home() {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${localStorage.getItem('apiKey')}` // Retrieve apiKey
         },
         body: JSON.stringify({ text_to_parse: result }),
       });
@@ -120,8 +121,10 @@ export default function Home() {
   const handleApiKeySubmit = () => {
     if (apiKey.trim()) {
       setApiKeySet(true);
+      localStorage.setItem('apiKey', apiKey); // Store apiKey in localStorage
     }
   }
+  
 
   // Render the component
   return (
