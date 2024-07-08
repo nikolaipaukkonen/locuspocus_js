@@ -154,6 +154,9 @@ export default function Home() {
             </button>
             <p>{parsedResult}</p>
             <h2>Add to database <span>-&gt;</span></h2>
+            <button onClick={convertToJSON} >
+              {'Add to database'}
+            </button>
           </>
         )}
       </div>
