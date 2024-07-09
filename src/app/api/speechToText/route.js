@@ -50,6 +50,7 @@ export async function POST(request) {
 // This function converts audio data to text using the OpenAI API
 async function convertAudioToText(audioData) {
   // Convert the audio data to MP3 format
+  console.log(process.env.OPENAI_API_KEY)
   console.log("mp3-muunnoksessa kestää")
   const mp3AudioData = await convertAudioToMp3(audioData);
   console.log("mp3-muunnos valmis")
