@@ -45,7 +45,7 @@ export default function Home() {
               reader.onloadend = async function () {
                 const base64Audio = reader.result.split(',')[1]; // Remove the data URL prefix
 
-                const response = await fetch("/api/speechToText", {
+                const response = await fetch("https://locuspocus-js.vercel.app/api/speechToText", {
                   method: "POST",
                   headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export default function Home() {
     console.log("convertToJSON kutsuttu");
   
     try {
-      const response = await fetch("/api/parseJSON", {
+      const response = await fetch("https://locuspocus-js.vercel.app/api/parseJSON", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
