@@ -45,7 +45,6 @@ export default function Home() {
                 const base64Audio = reader.result.split(',')[1]; // Remove the data URL prefix
 
                 const response = await fetch("/api/speechToText", {
-                  Allow: POST,
                   method: "POST",
                   headers: {
                     'Content-Type': 'application/json',
