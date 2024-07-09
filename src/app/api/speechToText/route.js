@@ -29,7 +29,7 @@ export async function POST(request) {
 
   // Convert the Base64 audio data back to a Buffer
   const audio = Buffer.from(base64Audio, 'base64');
-
+  console.log("kutsu onnistui")
   try {
     // Convert the audio data to text
     const text = await convertAudioToText(audio);

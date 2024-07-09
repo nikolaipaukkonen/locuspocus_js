@@ -38,14 +38,14 @@ export default function Home() {
               console.error('Error playing audio:', err);
             };
             //audio.play();
-
+            console.log("kutsutaan speechToText")
             try {
               const reader = new FileReader();
               reader.readAsDataURL(audioBlob);
               reader.onloadend = async function () {
                 const base64Audio = reader.result.split(',')[1]; // Remove the data URL prefix
 
-                const response = await fetch("https://locuspocus-js.vercel.app/speechToText", {
+                const response = await fetch("/api/speechToText", {
                   method: "POST",
                   headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export default function Home() {
     console.log("convertToJSON kutsuttu");
   
     try {
-      const response = await fetch("https://locuspocus-js.vercel.app/parseJSON", {
+      const response = await fetch("/api/parseJSON", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
