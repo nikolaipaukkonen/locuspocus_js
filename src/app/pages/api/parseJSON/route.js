@@ -27,7 +27,6 @@ export async function POST(request) {
   const req = await request.json()
 
   // Extract the audio data from the request body
-  console.log(transcribedText)
   const transcribedText = req.text_to_parse;
 
   try {
