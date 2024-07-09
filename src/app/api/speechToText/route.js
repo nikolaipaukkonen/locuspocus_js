@@ -5,6 +5,7 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import { NextResponse } from "next/server";
 
+console.log("kutsu alkoi")
 // Promisify the exec function from child_process
 const util = require('util');
 const execAsync = util.promisify(exec);

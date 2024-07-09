@@ -32,7 +32,6 @@ export default function Home() {
           newMediaRecorder.onstop = async () => {
             const audioBlob = new Blob(chunks, { type: 'audio/webm' });
             const audioUrl = URL.createObjectURL(audioBlob);
-            console.log(audioUrl)
             const audio = new Audio(audioUrl);
             audio.onerror = function (err) {
               console.error('Error playing audio:', err);
