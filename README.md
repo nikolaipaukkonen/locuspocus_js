@@ -1,6 +1,6 @@
 # Locus Pocus App
 
-The project is intended for transcribing and parsing archaeological field notes, such as stratigraphical documentation. 
+The project is intended for transcribing and parsing archaeological field notes, such as stratigraphical documentation. Add the required environment variables (i.e. the OpenAI api key).
 
 ## To be implemented
 - Either local "database" (a JSON file creation mode)
