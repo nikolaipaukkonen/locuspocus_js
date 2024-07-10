@@ -9,8 +9,9 @@ export default function Home() {
   // Define state variables for the password, result, recording status, and media recorder
   const [password, setPassword] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);
-  const [result, setResult] = useState();
   const [parsedResult, setParsedResult] = useState();
+  const [result, setResult] = useState();
+  const [allResults, setAllResults] = useState([]);
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
@@ -108,6 +109,10 @@ export default function Home() {
       console.log("data_json");
       console.log(data_json);
       setParsedResult(data_json.result);
+      console.log("parsedResult");
+      console.log(parsedResult);
+      setAllResults([...allResults, data_json.result])
+      console.log('Rendering with data:', allResults);
 
     } catch (error) {
       console.error("Error converting to JSON:", error);
@@ -116,7 +121,7 @@ export default function Home() {
 
   // Function to handle password submission
   const handlePasswordSubmit = () => {
-    if (password === "EAA2024_test") {
+    if (password === process.env.NEXT_PUBLIC_PASSWD) {
       setPasswordValid(true);
     } else {
       alert("Invalid password");
@@ -124,6 +129,7 @@ export default function Home() {
   }
 
   // Render the component
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -150,14 +156,19 @@ export default function Home() {
             <button onClick={convertToJSON} >
               {'Convert to JSON'}
             </button>
-            <p>{parsedResult}</p>
-            <h2>Add to database <span>-&gt;</span></h2>
-            <button onClick={convertToJSON} >
-              {'Add to database'}
-            </button>
-          </>
-        )}
-      </div>
-    </main>
+            <>
+  <h2>Results</h2>
+  {allResults.map((result, index) => (
+    <p key={index}>{result}</p>
+  ))}
+</>
+        <h2>Add to database <span>-&gt;</span></h2>
+        <button onClick={convertToJSON}>
+          {'Add to database'}
+        </button>
+      </>
+    )}
+  </div>
+</main>
   )
 }

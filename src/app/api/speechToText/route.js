@@ -6,7 +6,7 @@ import fs from 'fs';
 import { NextResponse } from "next/server";
 
 console.log("kutsu alkoi")
-// Promisify the exec function from child_process
+// Promisify the exec function from child_process POISTA?
 const util = require('util');
 const execAsync = util.promisify(exec);
 
@@ -71,23 +71,34 @@ async function convertAudioToText(audioData) {
   return transcribedText;
 }
 
-// This function converts audio data to MP3 format using ffmpeg
+const { spawn } = require('child_process');
+const { Readable } = require('stream');
+
+// This function converts audio data to MP3 format using ffmpeg and returns a buffer
 async function convertAudioToMp3(audioData) {
-  // Write the audio data to a file
-  const inputPath = '/tmp/input.webm';
+  return new Promise((resolve, reject) => {
+    const ffmpegProcess = spawn('ffmpeg', [
+      '-y', // Overwrite output files without asking
+      '-i', 'pipe:0', // Input from stdin
+      '-f', 'mp3', // Output format
+      'pipe:1' // Output to stdout
+    ]);
 
-  fs.writeFileSync(inputPath, audioData);
+    let mp3Buffer = Buffer.alloc(0); // Initialize an empty buffer to collect MP3 data
 
-  // Convert the audio to MP3 using ffmpeg
-  const outputPath = '/tmp/output.mp3';
-  await execAsync(`ffmpeg -y -i ${inputPath} ${outputPath}`);
-  
+    ffmpegProcess.stdout.on('data', (chunk) => {
+      mp3Buffer = Buffer.concat([mp3Buffer, chunk]); // Collect MP3 data chunks
+    });
 
-  // Read the converted audio data
-  const mp3AudioData = fs.readFileSync(outputPath);
-  // Delete the temporary files
-  fs.unlinkSync(inputPath);
-  fs.unlinkSync(outputPath);
+    ffmpegProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(mp3Buffer); // Resolve the promise with the MP3 buffer
+      } else {
+        reject(new Error(`ffmpeg process exited with code ${code}`));
+      }
+    });
 
-  return mp3AudioData;
+    ffmpegProcess.stdin.write(audioData); // Write the original audio data to ffmpeg
+    ffmpegProcess.stdin.end(); // Close stdin to signal that we're done sending data
+  });
 }

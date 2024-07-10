@@ -33,8 +33,6 @@ export async function POST(request) {
     // Convert the audio data to text
     const text = await parseToJSON(instruction_prompt,transcribedText);
     // Return the transcribed text in the response
-    console.log("text")
-    console.log(text)
     return NextResponse.json({result: text}, {status:200});
   } catch(error) {
     // Handle any errors that occur during the request
@@ -56,6 +54,5 @@ async function parseToJSON(instruction_prompt, input_text) {
         response_format:{type: "json_object"}
     })
     console.log(parsedText)
-    console.log(parsedText.choices[0].message.content)
   return parsedText.choices[0].message.content;
 }
