@@ -8,7 +8,7 @@ The project is intended for transcribing and parsing archaeological field notes,
 - Users?
 - Input OpenAI API key
 - Input online database API key
-- User can modify the prompt
+- ~~User can modify the prompt~~
 
 ## Next.js
 
