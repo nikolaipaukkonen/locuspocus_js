@@ -153,15 +153,19 @@ export default function Home() {
         ) : (
           <>
             <h2>Convert audio to text <span>-&gt;</span></h2>
-            <button onClick={recording ? stopRecording : startRecording} >
+            <div className={styles.centeredButtonContainer}>
+            <button className={styles.roundButton} onClick={recording ? stopRecording : startRecording} >
               {recording ? 'Stop Recording' : 'Start Recording'}
             </button>
+            </div>
             <h2>Results</h2>
             <textarea value={result} onChange={(e) => setResult(e.target.value)} />
             <h2>Convert audio text to json <span>-&gt;</span></h2>
-            <button onClick={convertToJSON} >
+            <div className={styles.centeredButtonContainer}>
+            <button className={styles.roundButton} onClick={convertToJSON} >
               {'Convert to JSON'}
             </button>
+            </div>
             <>
               <h2>All Results</h2>
               {allResults.map((result, index) => (
@@ -173,9 +177,11 @@ export default function Home() {
               ))}
             </>
             <h2>Add to database <span>-&gt;</span></h2>
-            <button onClick={convertToJSON}>
+            <div className={styles.centeredButtonContainer}>
+            <button className={styles.roundButton} onClick={convertToJSON}>
               {'Add to database'}
             </button>
+            </div>
           </>
         )}
       </div>
