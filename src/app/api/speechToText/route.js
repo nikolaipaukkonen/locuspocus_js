@@ -52,22 +52,21 @@ export async function POST(request) {
 async function convertAudioToText(audioData) {
   // Convert the audio data to MP3 format
   const mp3AudioData = await convertAudioToMp3(audioData);
-  console.log("mp3-muunnos valmis")
+
   // Write the MP3 audio data to a file
   const outputPath = '/tmp/output.mp3';
   fs.writeFileSync(outputPath, mp3AudioData);
-  console.log(outputPath);
+
   // Transcribe the audio
   const response = await openai.audio.transcriptions.create(
       { model: 'whisper-1', file: fs.createReadStream(outputPath) }
   );
-  console.log(response.text);
+
   // Delete the temporary file
   fs.unlinkSync(outputPath);
 
   // The API response contains the transcribed text
   const transcribedText = response.text;
-  console.log(transcribedText);
   return transcribedText;
 }
 
