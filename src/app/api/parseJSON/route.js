@@ -6,8 +6,7 @@ import fs from 'fs';
 import { NextResponse } from "next/server";
 
 console.log("POST tuli perille")
-// Promisify the exec function from child_process
-const util = require('util');
+// Promisify the exec functiononst util = require('util');
 const execAsync = util.promisify(exec);
 const instruction_prompt = process.env.PROMPT
 
@@ -53,6 +52,5 @@ async function parseToJSON(instruction_prompt, input_text) {
         model: "gpt-3.5-turbo",
         response_format:{type: "json_object"}
     })
-    console.log(parsedText)
   return parsedText.choices[0].message.content;
 }
