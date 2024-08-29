@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import { NextResponse } from "next/server";
 
-console.log("POST tuli perille")
+const util = require('util');
 // Promisify the exec functiononst util = require('util');
 const execAsync = util.promisify(exec);
 const instruction_prompt = process.env.PROMPT
