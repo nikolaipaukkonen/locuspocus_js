@@ -74,8 +74,10 @@ export default function Home() {
   const startRecording = () => {
     if (mediaRecorder) {
       mediaRecorder.start();
-      console.log("startRecording")
+      console.log("startRecording");
       setRecording(true);
+    } else {
+      console.error("MediaRecorder is not initialized. Ensure password is valid and microphone access is granted.");
     }
   };
 
@@ -83,8 +85,10 @@ export default function Home() {
   const stopRecording = () => {
     if (mediaRecorder) {
       mediaRecorder.stop();
-      console.log('stopRecording')
+      console.log("stopRecording");
       setRecording(false);
+    } else {
+      console.error("MediaRecorder is not initialized.");
     }
   };
 
@@ -121,7 +125,8 @@ export default function Home() {
 
   // Function to handle password submission
   const handlePasswordSubmit = () => {
-    if (password === process.env.NEXT_PUBLIC_PASSWD) {
+    const passwordEnv = process.env.NEXT_PUBLIC_PASSWD; // Ensure this is prefixed with NEXT_PUBLIC_
+    if (password === passwordEnv) {
       setPasswordValid(true);
     } else {
       alert("Invalid password");
