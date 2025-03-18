@@ -19,39 +19,102 @@ export default function Home() {
   // This array will hold the audio data
   let chunks = [];
 
-  const addToDatabase = () => {
-    try {
-      const existingData = JSON.parse(localStorage.getItem("database")) || [];
-      const updatedData = [...existingData, ...allResults];
-      localStorage.setItem("database", JSON.stringify(updatedData));
-      setAllResults([]); // Clear the fields after storing
-      alert("Data added to the database successfully!");
-    } catch (error) {
-      console.error("Error adding to database:", error);
-      alert("Failed to add data to the database.");
-    }
+  // Define the expected schema for the database
+const defaultSchema = {
+  UNIT_NUMBER: null,
+  UNIT_TYPE: "",
+  UNIT_NAME: "",
+  ABOVE_WHAT: [],
+  BELOW_WHAT: [],
+  THICKNESS: null,
+  SOIL_TYPE: "",
+  COLOR: "",
+  FINDS: [],
+  DATING: "",
+  INTERPRETATION: "",
+  TOOLS_USED: []
+};
+
+const formatDataToSchema = (data) => {
+  return {
+    ...defaultSchema,
+    ...data // Merge the provided data with the default schema
   };
-  
-  // Function to export the database to an Excel file
-  const exportToExcel = () => {
-    try {
-      const data = JSON.parse(localStorage.getItem("database")) || [];
-      if (data.length === 0) {
-        alert("No data available to export.");
-        return;
+};
+
+// Function to add all results to the database
+const addToDatabase = () => {
+  try {
+    // Retrieve existing data from localStorage
+    const existingData = JSON.parse(localStorage.getItem("database")) || [];
+
+    // Ensure all results are properly formatted
+    const formattedResults = allResults.map(result => {
+      if (typeof result === "string") {
+        try {
+          const parsedResult = JSON.parse(result);
+          return formatDataToSchema(parsedResult);
+        } catch (error) {
+          console.error("Error parsing result:", result, error);
+          throw new Error("Invalid result format. Ensure all results are valid JSON.");
+        }
       }
-  
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Database");
-  
-      XLSX.writeFile(workbook, "database.xlsx");
-      alert("Data exported successfully!");
-    } catch (error) {
-      console.error("Error exporting to Excel:", error);
-      alert("Failed to export data.");
+      return formatDataToSchema(result);
+    });
+
+    // Store the updated data back in localStorage
+    localStorage.setItem("database", JSON.stringify([...existingData, ...formattedResults]));
+
+    // Clear stored results
+    setAllResults([]);
+    alert("Data added to the database successfully!");
+  } catch (error) {
+    console.error("Error adding to database:", error);
+    alert("Failed to add data to the database.");
+  }
+};
+
+
+// Function to export the database to an Excel file
+const exportToExcel = () => {
+  try {
+    const data = JSON.parse(localStorage.getItem("database")) || [];
+    if (data.length === 0) {
+      alert("No data available to export.");
+      return;
     }
-  };
+
+    // Format each entry properly before exporting
+    const formattedData = data.map(entry => {
+      const formattedEntry = formatDataToSchema(entry);
+      return {
+        ...formattedEntry,
+        ABOVE_WHAT: formattedEntry.ABOVE_WHAT.join(", "),
+        BELOW_WHAT: formattedEntry.BELOW_WHAT.join(", "),
+        FINDS: formattedEntry.FINDS.join(", "),
+        TOOLS_USED: formattedEntry.TOOLS_USED.join(", ")
+      };
+    });
+
+    // Convert formatted data to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+    // Adjust column widths (optional)
+    worksheet['!cols'] = Object.keys(defaultSchema).map(key => ({ wch: Math.max(12, key.length) }));
+
+    // Create a new workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Database");
+
+    // Save as file
+    XLSX.writeFile(workbook, "database.xlsx");
+    alert("Data exported successfully!");
+  } catch (error) {
+    console.error("Error exporting to Excel:", error);
+    alert("Failed to export data.");
+  }
+};
+
 
   // This useEffect hook sets up the media recorder when the component mounts
   useEffect(() => {
