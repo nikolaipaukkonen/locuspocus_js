@@ -47,15 +47,48 @@ export async function POST(request) {
 
 // This function converts input text to JSON using the OpenAI API
 async function parseToJSON(instruction_prompt, input_text) {
-    const parsedText = await openai.chat.completions.create({
-      messages: [
-        { role: "system", content: "Muodosta json " + instruction_prompt }, 
-        { role: "user", content: "json " + input_text }
-    ],
-    model: "gpt-4o-mini",
-    response_format: { type: "json_object" },
-    temperature: 0
-    })
+  const prompt = `
+  You are a JSON generator. Follow the schema provided in the instruction strictly.
+  
+  **IMPORTANT RULES:**
+  - Your response **must** be a valid JSON object.
+  - **Do NOT omit any fields**; every key must exist in the output.
+  - If information is missing, set it to **"None"** (for strings) or **[]** (for arrays).
+  - Use the exact key names as provided below, without any changes.
+  - Do not explain your answer—return only the JSON.
+  
+  **Schema Example (Follow This Exactly):**
+  {
+    "UNIT_NUMBER": 1,
+    "UNIT_TYPE": "maayksikkö",
+    "UNIT_NAME": "Tumma multakerros",
+    "ABOVE_WHAT": ["2", "3"],
+    "BELOW_WHAT": ["5"],
+    "THICKNESS": 30,
+    "SOIL_TYPE": "None",
+    "COLOR": "tumma ruskea",
+    "FINDS": ["keramiikkaa", "palaneita luita"],
+    "DATING": "1500-luvun loppu",
+    "INTERPRETATION": "täyttökerros",
+    "TOOLS_USED": ["lasta", "lapio"]
+  }
+  
+  **Now, generate a JSON response in this format based on the input below.**
+  
+  **Input Description:**
+  ${input_text}
+  `;
+  
+
+  const parsedText = await openai.chat.completions.create({
+    messages: [
+      { role: "system", content: "You are a helpful assistant that generates JSON strictly based on the provided schema." },
+      { role: "user", content: prompt }
+      ],
+      model: "gpt-4o-mini",
+      temperature: 0,
+      response_format: { type: "json_object" }  // This ensures that the response is always JSON
+  });
 
   return parsedText.choices[0].message.content;
 }
