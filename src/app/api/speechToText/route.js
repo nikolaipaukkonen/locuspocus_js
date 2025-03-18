@@ -1,14 +1,14 @@
 
 // Import necessary libraries
 import OpenAI from "openai";
-import { exec } from 'child_process';
 import fs from 'fs';
 import { NextResponse } from "next/server";
+import path from 'path';
 
-console.log("kutsu alkoi")
-// Promisify the exec function from child_process POISTA?
-const util = require('util');
-const execAsync = util.promisify(exec);
+// Hardcoded path to the ffmpeg-static binary
+const hardcodedFfmpegPath = path.resolve(
+  '/workspaces/locuspocus_js/node_modules/ffmpeg-static/ffmpeg'
+);
 
 // Configure the OpenAI API client
 const openai = new OpenAI({
@@ -76,7 +76,7 @@ const { Readable } = require('stream');
 // This function converts audio data to MP3 format using ffmpeg and returns a buffer
 async function convertAudioToMp3(audioData) {
   return new Promise((resolve, reject) => {
-    const ffmpegProcess = spawn('ffmpeg', [
+    const ffmpegProcess = spawn(hardcodedFfmpegPath, [
       '-y', // Overwrite output files without asking
       '-i', 'pipe:0', // Input from stdin
       '-f', 'mp3', // Output format
@@ -95,6 +95,10 @@ async function convertAudioToMp3(audioData) {
       } else {
         reject(new Error(`ffmpeg process exited with code ${code}`));
       }
+    });
+
+    ffmpegProcess.stdin.on('error', (err) => {
+      reject(new Error(`Error writing to ffmpeg stdin: ${err.message}`));
     });
 
     ffmpegProcess.stdin.write(audioData); // Write the original audio data to ffmpeg
