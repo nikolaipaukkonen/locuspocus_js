@@ -3,6 +3,7 @@
 // Import necessary libraries
 import styles from './page.module.css'
 import { useState, useEffect } from "react";
+import * as XLSX from 'xlsx';
 
 // This is the main component of our application
 export default function Home() {
@@ -17,6 +18,40 @@ export default function Home() {
 
   // This array will hold the audio data
   let chunks = [];
+
+  const addToDatabase = () => {
+    try {
+      const existingData = JSON.parse(localStorage.getItem("database")) || [];
+      const updatedData = [...existingData, ...allResults];
+      localStorage.setItem("database", JSON.stringify(updatedData));
+      setAllResults([]); // Clear the fields after storing
+      alert("Data added to the database successfully!");
+    } catch (error) {
+      console.error("Error adding to database:", error);
+      alert("Failed to add data to the database.");
+    }
+  };
+  
+  // Function to export the database to an Excel file
+  const exportToExcel = () => {
+    try {
+      const data = JSON.parse(localStorage.getItem("database")) || [];
+      if (data.length === 0) {
+        alert("No data available to export.");
+        return;
+      }
+  
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Database");
+  
+      XLSX.writeFile(workbook, "database.xlsx");
+      alert("Data exported successfully!");
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      alert("Failed to export data.");
+    }
+  };
 
   // This useEffect hook sets up the media recorder when the component mounts
   useEffect(() => {
@@ -183,10 +218,16 @@ export default function Home() {
             </>
             <h2>Add to database <span>-&gt;</span></h2>
             <div className={styles.centeredButtonContainer}>
-            <button className={styles.roundButton} onClick={convertToJSON}>
+            <button className={styles.roundButton} onClick={addToDatabase}>
               {'Add to database'}
             </button>
             </div>
+            <h2>Export database <span>-&gt;</span></h2>
+          <div className={styles.centeredButtonContainer}>
+            <button className={styles.roundButton} onClick={exportToExcel}>
+              {'Export to Excel'}
+            </button>
+          </div>
           </>
         )}
       </div>
