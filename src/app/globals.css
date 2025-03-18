@@ -6,13 +6,19 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --primary-color: 29, 78, 216; /* A professional blue */
+  --secondary-color: 234, 88, 12; /* A vibrant orange */
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 30, 41, 59;
+    --primary-color: 59, 130, 246; /* Lighter blue for dark mode */
+    --secondary-color: 249, 115, 22; /* Softer orange for dark mode */
   }
 }
 
@@ -24,4 +30,87 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  transition: background var(--transition-speed), color var(--transition-speed);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: rgb(var(--primary-color));
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: rgb(var(--primary-color));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+button:hover {
+  background-color: rgb(var(--secondary-color));
+  transform: translateY(-2px);
+}
+
+input, textarea {
+  border: 1px solid rgba(var(--foreground-rgb), 0.2);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+input:focus, textarea:focus {
+  border-color: rgb(var(--primary-color));
+  box-shadow: 0 0 5px rgba(var(--primary-color), 0.5);
+  outline: none;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.roundButton {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: rgb(var(--primary-color));
+  color: white;
+  cursor: pointer;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.roundButton:hover {
+  background-color: rgb(var(--secondary-color));
+  transform: scale(1.1);
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.centeredButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
 }

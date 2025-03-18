@@ -48,7 +48,7 @@ export default function Home() {
                   method: "POST",
                   headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('apiKey')}` // Retrieve apiKey
+                    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` // Retrieve apiKey
                   },
                   body: JSON.stringify({ audio: base64Audio }),
                 });
@@ -96,7 +96,7 @@ export default function Home() {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('apiKey')}` // Retrieve apiKey
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}` // Retrieve apiKey
         },
         body: JSON.stringify({ text_to_parse: result }),
       });
