@@ -48,9 +48,14 @@ export async function POST(request) {
 // This function converts input text to JSON using the OpenAI API
 async function parseToJSON(instruction_prompt, input_text) {
     const parsedText = await openai.chat.completions.create({
-        messages: [{role: "system","content": "json "+instruction_prompt}, {role: "user", "content": "json " + input_text}],
-        model: "gpt-3.5-turbo",
-        response_format:{type: "json_object"}
+      messages: [
+        { role: "system", content: "Muodosta json " + instruction_prompt }, 
+        { role: "user", content: "json " + input_text }
+    ],
+    model: "gpt-4o-mini",
+    response_format: { type: "json_object" },
+    temperature: 0
     })
+
   return parsedText.choices[0].message.content;
 }
