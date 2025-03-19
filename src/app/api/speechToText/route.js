@@ -1,14 +1,18 @@
-
 // Import necessary libraries
 import OpenAI from "openai";
 import fs from 'fs';
 import { NextResponse } from "next/server";
 import path from 'path';
+import { exec } from 'child_process';
+import util from 'util';
+import ffmpegPath from 'ffmpeg-static'; // Ensure ffmpeg-static is installed
 
-// Hardcoded path to the ffmpeg-static binary
-const hardcodedFfmpegPath = path.resolve(
-  '/workspaces/locuspocus_js/node_modules/ffmpeg-static/ffmpeg'
-);
+const execAsync = util.promisify(exec);
+
+// Resolve the ffmpeg binary path dynamically
+const resolvedFfmpegPath = '/usr/local/bin/ffmpeg'; // Use the copied binary path
+
+console.log('Resolved ffmpeg path:', resolvedFfmpegPath); // Log the resolved path for debugging
 
 // Configure the OpenAI API client
 const openai = new OpenAI({
@@ -17,34 +21,58 @@ const openai = new OpenAI({
 
 // This function handles POST requests to the /api/speechToText route
 export async function POST(request) {
-  // Check if the OpenAI API key is configured
-  if (!openai.apiKey) {
-    return NextResponse.json({ error: "OpenAI API key not configured, please follow instructions in README.md" }, {status:500});
-  }
-
-  // Parse the request body
-  const req = await request.json()
-
-  // Extract the audio data from the request body
-  const base64Audio = req.audio;
-
-  // Convert the Base64 audio data back to a Buffer
-  const audio = Buffer.from(base64Audio, 'base64');
-  console.log("kutsu onnistui")
   try {
-    // Convert the audio data to text
-    const text = await convertAudioToText(audio);
-    // Return the transcribed text in the response
-    return NextResponse.json({result: text}, {status:200});
-  } catch(error) {
-    // Handle any errors that occur during the request
-    if (error.response) {
-      console.error(error.response.status, error.response.data);
-      return NextResponse.json({ error: error.response.data }, {status:500});
-    } else {
-      console.error(`Error with OpenAI API request: ${error.message}`);
-      return NextResponse.json({ error: "An error occurred during your request." }, {status:500});
+    // Parse the request body
+    const { audio } = await request.json();
+    console.log('Received audio data:', audio ? 'Yes' : 'No'); // Log if audio data is received
+
+    if (!audio) {
+      throw new Error('Audio data is missing in the request.');
     }
+
+    if (!resolvedFfmpegPath) {
+      throw new Error('FFmpeg binary not found. Ensure ffmpeg-static is installed or ffmpeg is available in the system.');
+    }
+
+    // Save the audio data to a temporary file
+    const inputPath = '/tmp/input.webm';
+    fs.writeFileSync(inputPath, Buffer.from(audio, 'base64')); // Assuming audio is base64-encoded
+    console.log('Audio data saved to:', inputPath);
+
+    // Log the command for debugging
+    const outputPath = '/tmp/output.mp3';
+    const command = `${resolvedFfmpegPath} -i ${inputPath} -vn -ar 44100 -ac 2 -b:a 192k ${outputPath}`;
+    console.log('Executing command:', command);
+
+    await execAsync(command);
+    console.log('FFmpeg command executed successfully.');
+
+    // Clean up the temporary input file
+    fs.unlinkSync(inputPath);
+    console.log('Temporary input file deleted.');
+
+    // Ensure the output file exists before responding
+    if (!fs.existsSync(outputPath)) {
+      throw new Error('Output file was not created.');
+    }
+
+    // Convert the audio to text
+    const transcription = await convertAudioToText(fs.readFileSync(outputPath));
+    console.log('Transcription:', transcription);
+
+    // Clean up the temporary output file (moved to convertAudioToText)
+    // fs.unlinkSync(outputPath); // Removed duplicate deletion
+    console.log('Temporary output file deleted.');
+
+    // Send a success response with the transcription
+    const response = { message: 'Audio processed successfully', transcription };
+    console.log('Response:', response);
+    return NextResponse.json(response, { status: 200 });
+  } catch (error) {
+    console.error('Error in speechToText API:', error);
+
+    // Ensure a valid JSON response is sent even on error
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -76,7 +104,7 @@ const { Readable } = require('stream');
 // This function converts audio data to MP3 format using ffmpeg and returns a buffer
 async function convertAudioToMp3(audioData) {
   return new Promise((resolve, reject) => {
-    const ffmpegProcess = spawn(hardcodedFfmpegPath, [
+    const ffmpegProcess = spawn(resolvedFfmpegPath, [
       '-y', // Overwrite output files without asking
       '-i', 'pipe:0', // Input from stdin
       '-f', 'mp3', // Output format

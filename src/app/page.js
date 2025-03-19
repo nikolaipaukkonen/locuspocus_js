@@ -155,7 +155,7 @@ const exportToExcel = () => {
                 if (response.status !== 200) {
                   throw data.error || new Error(`Request failed with status ${response.status}`);
                 }
-                setResult(data.result);
+                setResult(data.transcription); // Use the transcription field from the API response
               }
             } catch (error) {
               console.error(error);

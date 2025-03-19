@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",  // <=== enables static exports
+  output: "standalone",  // <=== enables server-side features like API routes
   reactStrictMode: true,
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;

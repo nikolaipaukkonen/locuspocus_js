@@ -1,4 +1,3 @@
-
 // Import necessary libraries
 import OpenAI from "openai";
 import { exec } from 'child_process';
