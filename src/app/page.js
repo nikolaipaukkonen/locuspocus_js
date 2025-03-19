@@ -271,13 +271,45 @@ const exportToExcel = () => {
             </div>
             <>
               <h2>All Results</h2>
-              {allResults.map((result, index) => (
-                <textarea
-                  key={index}
-                  value={result}
-                  onChange={(e) => handleResultChange(index, e.target.value)}
-                />
-              ))}
+              <table className="resultsTable">
+                <thead>
+                  <tr>
+                    <th>UNIT_NUMBER</th>
+                    <th>UNIT_TYPE</th>
+                    <th>UNIT_NAME</th>
+                    <th>ABOVE_WHAT</th>
+                    <th>BELOW_WHAT</th>
+                    <th>THICKNESS</th>
+                    <th>SOIL_TYPE</th>
+                    <th>COLOR</th>
+                    <th>FINDS</th>
+                    <th>DATING</th>
+                    <th>INTERPRETATION</th>
+                    <th>TOOLS_USED</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allResults.map((result, index) => {
+                    const formattedResult = typeof result === "string" ? JSON.parse(result) : result;
+                    return (
+                      <tr key={index}>
+                        <td>{formattedResult.UNIT_NUMBER || "None"}</td>
+                        <td>{formattedResult.UNIT_TYPE || "None"}</td>
+                        <td>{formattedResult.UNIT_NAME || "None"}</td>
+                        <td>{formattedResult.ABOVE_WHAT.join(", ") || "None"}</td>
+                        <td>{formattedResult.BELOW_WHAT.join(", ") || "None"}</td>
+                        <td>{formattedResult.THICKNESS || "None"}</td>
+                        <td>{formattedResult.SOIL_TYPE || "None"}</td>
+                        <td>{formattedResult.COLOR || "None"}</td>
+                        <td>{formattedResult.FINDS.join(", ") || "None"}</td>
+                        <td>{formattedResult.DATING || "None"}</td>
+                        <td>{formattedResult.INTERPRETATION || "None"}</td>
+                        <td>{formattedResult.TOOLS_USED.join(", ") || "None"}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </>
             <h2>Add to database <span>-&gt;</span></h2>
             <div className={styles.centeredButtonContainer}>

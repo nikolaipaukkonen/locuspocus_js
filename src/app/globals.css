@@ -63,6 +63,14 @@ input, textarea, button {
     height: 50px;
     font-size: 1rem;
   }
+
+  .resultsTable {
+    font-size: 0.8rem;
+  }
+
+  .resultsTable th, .resultsTable td {
+    padding: 0.5rem;
+  }
 }
 
 body {
@@ -178,4 +186,46 @@ textarea {
   display: flex;
   justify-content: center;
   margin: 1rem 0;
+}
+
+.resultsTable {
+  width: 100%;
+  border-collapse: collapse; /* Ensure borders are collapsed */
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  text-align: left;
+  background-color: rgba(var(--background-start-rgb), 0.8);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  border: 1px solid rgba(var(--foreground-rgb), 0.2); /* Add border around the table */
+}
+
+.resultsTable th, .resultsTable td {
+  padding: 1rem; /* Increase padding for better readability */
+  border: 1px solid rgba(var(--foreground-rgb), 0.2); /* Add borders to cells */
+}
+
+.resultsTable th {
+  background-color: rgba(var(--primary-color), 0.8);
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center; /* Center-align column headers */
+  font-size: 1rem; /* Slightly larger font for headers */
+}
+
+.resultsTable tr:nth-child(even) {
+  background-color: rgba(var(--foreground-rgb), 0.05);
+}
+
+.resultsTable tr:hover {
+  background-color: rgba(var(--primary-color), 0.1);
+  transition: background-color var(--transition-speed);
+}
+
+.resultsTable td {
+  color: rgb(var(--foreground-rgb));
+  word-wrap: break-word;
+  text-align: left; /* Left-align table data */
 }
