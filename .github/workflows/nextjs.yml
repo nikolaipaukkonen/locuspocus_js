@@ -76,6 +76,7 @@ jobs:
       - name: Build with Next.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          NEXT_PUBLIC_PASSWD: ${{ secrets.NEXT_PUBLIC_PASSWD }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -95,3 +96,4 @@ jobs:
         uses: actions/deploy-pages@v4
         env: 
           OPENAI_API_KEY: $${{ secrets.OPENAI_API_KEY }}
+          NEXT_PUBLIC_PASSWD: ${{ secrets.NEXT_PUBLIC_PASSWD }}
