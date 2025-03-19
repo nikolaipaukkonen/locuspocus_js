@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 100%; /* Prevent horizontal overflow */
+  box-sizing: border-box;
+  overflow: auto; /* Ensure scrollability if content overflows */
+}
+
+.centeredButtonContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Ensure buttons wrap if they don't fit */
+  margin: 1rem 0;
+  gap: 1rem; /* Add spacing between buttons */
+}
+
+input, textarea, button {
+  max-width: 100%; /* Prevent elements from exceeding the container width */
+  box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -22,6 +47,24 @@
   }
 }
 
+@media (max-width: 768px) {
+  button {
+    padding: 0.5rem 1rem; /* Reduce button size on smaller screens */
+    font-size: 0.9rem;
+  }
+
+  input, textarea {
+    padding: 0.5rem; /* Adjust padding for smaller screens */
+    font-size: 0.9rem;
+  }
+
+  .roundButton {
+    width: 50px;
+    height: 50px;
+    font-size: 1rem;
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -30,36 +73,19 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  background-color: rgb(var(--background-start-rgb)); /* Fallback */
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
   margin: 0;
   padding: 0;
   transition: background var(--transition-speed), color var(--transition-speed);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
-  color: rgb(var(--primary-color));
-  margin-bottom: 1rem;
-}
-
-button {
-  background-color: rgb(var(--primary-color));
-  color: white;
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color var(--transition-speed), transform var(--transition-speed);
-}
-
-button:hover {
-  background-color: rgb(var(--secondary-color));
-  transform: translateY(-2px);
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 input, textarea {
+  color: rgb(var(--foreground-rgb)); /* Ensure text is visible */
+  background-color: white; /* Fallback for input fields */
   border: 1px solid rgba(var(--foreground-rgb), 0.2);
   border-radius: var(--border-radius);
   padding: 0.5rem;
@@ -68,10 +94,47 @@ input, textarea {
   box-sizing: border-box;
   transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: rgb(var(--primary-color));
+  margin-bottom: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+button {
+  background: linear-gradient(135deg, rgb(var(--primary-color)), rgb(var(--secondary-color)));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+
+button:hover {
+  background: linear-gradient(135deg, rgb(var(--secondary-color)), rgb(var(--primary-color)));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+input, textarea {
+  background-color: rgba(var(--background-start-rgb), 0.8); /* Subtle background */
+  color: rgb(var(--foreground-rgb));
+  border: 1px solid rgba(var(--foreground-rgb), 0.2);
+  border-radius: var(--border-radius);
+  padding: 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
 
 input:focus, textarea:focus {
   border-color: rgb(var(--primary-color));
-  box-shadow: 0 0 5px rgba(var(--primary-color), 0.5);
+  box-shadow: 0 0 8px rgba(var(--primary-color), 0.5);
   outline: none;
 }
 
@@ -93,15 +156,17 @@ input:focus, textarea:focus {
   justify-content: center;
   font-size: 1.2rem;
   font-weight: bold;
-  background-color: rgb(var(--primary-color));
+  background: linear-gradient(135deg, rgb(var(--primary-color)), rgb(var(--secondary-color)));
   color: white;
   cursor: pointer;
-  transition: background-color var(--transition-speed), transform var(--transition-speed);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .roundButton:hover {
-  background-color: rgb(var(--secondary-color));
+  background: linear-gradient(135deg, rgb(var(--secondary-color)), rgb(var(--primary-color)));
   transform: scale(1.1);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 textarea {
