@@ -11,7 +11,7 @@ const instruction_prompt = process.env.PROMPT
 
 // Configure the OpenAI API client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || (typeof window !== 'undefined' && localStorage.getItem('userApiKey')),
 });
 
 // This function handles POST requests to the /api/speechToText route
