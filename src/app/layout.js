@@ -9,19 +9,29 @@ const inter = Inter({ subsets: ['latin'] });
 export default function RootLayout({ children }) {
   const [showPopup, setShowPopup] = useState(false);
   const [apiKey, setApiKey] = useState('');
+  const [language, setLanguage] = useState('EN'); // Default language is English
 
   const handleSaveApiKey = () => {
     localStorage.setItem('userApiKey', apiKey);
     setShowPopup(false);
-    alert('API key saved successfully!');
+    alert(language === 'EN' ? 'API key saved successfully!' : 'API-avain tallennettu onnistuneesti!');
+  };
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'EN' ? 'FI' : 'EN'));
   };
 
   return (
-    <html lang="en">
+    <html lang={language === 'EN' ? 'en' : 'fi'}>
       <head></head>
       <body className={inter.className}>
+        <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+          <button onClick={toggleLanguage}>{language === 'EN' ? 'FI' : 'EN'}</button>
+        </div>
         <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-          <button onClick={() => setShowPopup(true)}>Insert API key</button>
+          <button onClick={() => setShowPopup(true)}>
+            {language === 'EN' ? 'Insert API key' : 'Lisää API-avain'}
+          </button>
         </div>
         {showPopup && (
           <div
@@ -36,18 +46,20 @@ export default function RootLayout({ children }) {
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             }}
           >
-            <h3>Insert API Key</h3>
+            <h3>{language === 'EN' ? 'Insert API Key' : 'Lisää API-avain'}</h3>
             <input
               type="text"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter your API key"
+              placeholder={language === 'EN' ? 'Enter your API key' : 'Syötä API-avain'}
               style={{ width: '100%', marginBottom: '1rem', padding: '0.5rem' }}
             />
             <button onClick={handleSaveApiKey} style={{ marginRight: '0.5rem' }}>
-              Save
+              {language === 'EN' ? 'Save' : 'Tallenna'}
             </button>
-            <button onClick={() => setShowPopup(false)}>Cancel</button>
+            <button onClick={() => setShowPopup(false)}>
+              {language === 'EN' ? 'Cancel' : 'Peruuta'}
+            </button>
           </div>
         )}
         {children}

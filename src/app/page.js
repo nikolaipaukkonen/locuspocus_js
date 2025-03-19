@@ -15,6 +15,7 @@ export default function Home() {
   const [allResults, setAllResults] = useState([]);
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [language, setLanguage] = useState('EN'); // Default language is English
 
   // This array will hold the audio data
   let chunks = [];
@@ -238,54 +239,65 @@ const exportToExcel = () => {
     setAllResults(updatedResults);
   }
 
+  const columnNames = {
+    EN: [
+      "UNIT_NUMBER", "UNIT_TYPE", "UNIT_NAME", "ABOVE_WHAT", "BELOW_WHAT",
+      "THICKNESS", "SOIL_TYPE", "COLOR", "FINDS", "DATING", "INTERPRETATION", "TOOLS_USED"
+    ],
+    FI: [
+      "YKSIKKÖNUMERO", "YKSIKÖN_TYYPPI", "YKSIKÖN_NIMI", "YLÄPUOLELLA",
+      "ALAPUOLELLA", "PAKSUUS", "MAALAJI", "VÄRI", "LÖYDÖT", "AJOITUS", "TULKINTA", "TYÖKALUT"
+    ]
+  };
+
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'EN' ? 'FI' : 'EN'));
+  };
+
   // Render the component
   return (
     <main className={styles.main}>
       <div className={styles.description}>
+        <div style={{ position: 'absolute', top: '10px', left: '10px' }}>
+          <button onClick={toggleLanguage}>{language === 'EN' ? 'FI' : 'EN'}</button>
+        </div>
         {!passwordValid ? (
           <>
-            <h2>Enter your password</h2>
+            <h2>{language === 'EN' ? 'Enter your password' : 'Syötä salasanasi'}</h2>
             <input 
               type="password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
-              placeholder="Enter password" 
+              placeholder={language === 'EN' ? 'Enter password' : 'Syötä salasana'} 
             />
-            <button onClick={handlePasswordSubmit}>Submit</button>
+            <button onClick={handlePasswordSubmit}>
+              {language === 'EN' ? 'Submit' : 'Lähetä'}
+            </button>
           </>
         ) : (
           <>
-            <h2>Convert audio to text <span>-&gt;</span></h2>
+            <h2>{language === 'EN' ? 'Convert audio to text' : 'Muunna ääni tekstiksi'} <span>-&gt;</span></h2>
             <div className={styles.centeredButtonContainer}>
             <button className={styles.roundButton} onClick={recording ? stopRecording : startRecording} >
-              {recording ? 'Stop Recording' : 'Start Recording'}
+              {recording ? (language === 'EN' ? 'Stop Recording' : 'Lopeta nauhoitus') : (language === 'EN' ? 'Start Recording' : 'Aloita nauhoitus')}
             </button>
             </div>
-            <h2>Results</h2>
+            <h2>{language === 'EN' ? 'Results' : 'Tulokset'}</h2>
             <textarea value={result} onChange={(e) => setResult(e.target.value)} />
-            <h2>Convert audio text to json <span>-&gt;</span></h2>
+            <h2>{language === 'EN' ? 'Convert audio text to JSON' : 'Muunna ääniteksti JSONiksi'} <span>-&gt;</span></h2>
             <div className={styles.centeredButtonContainer}>
             <button className={styles.roundButton} onClick={convertToJSON} >
-              {'Convert to JSON'}
+              {language === 'EN' ? 'Convert to JSON' : 'Muunna JSONiksi'}
             </button>
             </div>
             <>
-              <h2>All Results</h2>
+              <h2>{language === 'EN' ? 'All Results' : 'Kaikki tulokset'}</h2>
               <table className="resultsTable">
                 <thead>
                   <tr>
-                    <th>UNIT_NUMBER</th>
-                    <th>UNIT_TYPE</th>
-                    <th>UNIT_NAME</th>
-                    <th>ABOVE_WHAT</th>
-                    <th>BELOW_WHAT</th>
-                    <th>THICKNESS</th>
-                    <th>SOIL_TYPE</th>
-                    <th>COLOR</th>
-                    <th>FINDS</th>
-                    <th>DATING</th>
-                    <th>INTERPRETATION</th>
-                    <th>TOOLS_USED</th>
+                    {columnNames[language].map((col, index) => (
+                      <th key={index}>{col}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -293,34 +305,25 @@ const exportToExcel = () => {
                     const formattedResult = typeof result === "string" ? JSON.parse(result) : result;
                     return (
                       <tr key={index}>
-                        <td>{formattedResult.UNIT_NUMBER || "None"}</td>
-                        <td>{formattedResult.UNIT_TYPE || "None"}</td>
-                        <td>{formattedResult.UNIT_NAME || "None"}</td>
-                        <td>{formattedResult.ABOVE_WHAT.join(", ") || "None"}</td>
-                        <td>{formattedResult.BELOW_WHAT.join(", ") || "None"}</td>
-                        <td>{formattedResult.THICKNESS || "None"}</td>
-                        <td>{formattedResult.SOIL_TYPE || "None"}</td>
-                        <td>{formattedResult.COLOR || "None"}</td>
-                        <td>{formattedResult.FINDS.join(", ") || "None"}</td>
-                        <td>{formattedResult.DATING || "None"}</td>
-                        <td>{formattedResult.INTERPRETATION || "None"}</td>
-                        <td>{formattedResult.TOOLS_USED.join(", ") || "None"}</td>
+                        {columnNames[language].map((col, colIndex) => (
+                          <td key={colIndex}>{formattedResult[col] || "None"}</td>
+                        ))}
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
             </>
-            <h2>Add to database <span>-&gt;</span></h2>
+            <h2>{language === 'EN' ? 'Add to database' : 'Lisää tietokantaan'} <span>-&gt;</span></h2>
             <div className={styles.centeredButtonContainer}>
             <button className={styles.roundButton} onClick={addToDatabase}>
-              {'Add to database'}
+              {language === 'EN' ? 'Add to database' : 'Lisää tietokantaan'}
             </button>
             </div>
-            <h2>Export database <span>-&gt;</span></h2>
+            <h2>{language === 'EN' ? 'Export database' : 'Vie tietokanta'} <span>-&gt;</span></h2>
           <div className={styles.centeredButtonContainer}>
             <button className={styles.roundButton} onClick={exportToExcel}>
-              {'Export to Excel'}
+              {language === 'EN' ? 'Export to Excel' : 'Vie Exceliin'}
             </button>
           </div>
           </>
