@@ -10,17 +10,17 @@
   **Schema Example (Follow This Exactly):**
   {
     "UNIT_NUMBER": 1,
-    "UNIT_TYPE": "maayksikkö",
-    "UNIT_NAME": "Tumma multakerros",
-    "ABOVE_WHAT": ["2", "3"],
-    "BELOW_WHAT": ["5"],
+    "UNIT_TYPE": "soil deposit",
+    "UNIT_NAME": "dark gray silt layer",
+    "ABOVE_WHAT": ["5", "3"],
+    "BELOW_WHAT": ["1"],
     "THICKNESS": 30,
-    "SOIL_TYPE": "None",
-    "COLOR": "tumma ruskea",
-    "FINDS": ["keramiikkaa", "palaneita luita"],
-    "DATING": "1500-luvun loppu",
-    "INTERPRETATION": "täyttökerros",
-    "TOOLS_USED": ["lasta", "lapio"]
+    "SOIL_TYPE": "Silt",
+    "COLOR": "dark gray",
+    "FINDS": ["pottery", "burnt bone"],
+    "DATING": "16th century",
+    "INTERPRETATION": "fill layer",
+    "TOOLS_USED": ["trowel", "shovel"]
   }
   
   **Now, generate a JSON response in this format based on the input below.**
